@@ -46,7 +46,7 @@ public class Compartimentos {
             for (int l=1; l <= tam; l++) {
                 y[l] = y[l-1] + h * (-x[l-1]) * y[l-1];
             }
-            saida.println("L\tX\tY\tK1\tK2\tK3\tK4\tYl+1");
+            saida.println("L\tX\tY\tK1\tK2\tK3\tK4\tYexato\tErro");
             for (int l=0; l <= tam; l++) {
                 k1[l] = -x[l] * y[l];
                 k2[l] = -(x[l] + h/2)*(y[l] + h/2 * k1[l]);
@@ -60,7 +60,9 @@ public class Compartimentos {
                     "\t" + k2[l] + 
                     "\t" + k3[l] + 
                     "\t" + k4[l] + 
-                    "\t" + ((double)y[l] + h/6 * (k1[l] + k2[l] + k3[l] + k4[l]))
+                    //"\t" + ((double)y[l] + h/6 * (k1[l] + k2[l] + k3[l] + k4[l]))
+                    "\t" + (double)Math.exp(-x[l]*x[l]/2) +
+                    "\t" + (double)((y[l] - (Math.exp(-x[l]*x[l]/2)))*100/(Math.exp(-x[l]*x[l]/2)))
                 );
             }
             saida.close();  
