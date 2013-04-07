@@ -72,6 +72,69 @@ public class Compartimentos {
         }
     }
     
+    //Runge Kutta Fehlberg
+    public static void fehlberg(double h, int tam, double x[], double y[]) {
+        double a;
+        double b;
+        double alfa;
+        double hmax;
+        double hmin;
+        double TOL;
+        double delta;
+        double t = a;
+        double w = alfa;
+        h = hmax;
+        int FLAG = 0;
+        double k1, k2, k3, k4, k5, k6;
+        double R;
+        while(FLAG == 1) {
+            k1 = h f (t, w);
+            k2 = h f (t + (1/4*h), w + (1/4*k1));
+            k3 = h f (t + (3/8*h), w + (3/32*k1) + (9/32*k2));
+            k4 = h f (t + (12/13*h), w + (1932/2197*k1) - (7200/2197*k2) + (7296/2197*k3));
+            k5 = h f (t + h, w + (439/216*k1) - 8*k2 + (3680/513*k3) - (845/4104*k4));
+            k6 = h f (t + (1/2*h), w - (8/27*k1) + 2*k2 - (3544/2565*k3) + (1859/4104*k4) - (11/40*k5));
+            R = 1/h | (1/360*k1) - (128/4275*k3) - (2197/75240*k4) + (1/50*k5) + (2/55*k6) |;
+            if (R <= TOL) {
+                t = t + h;
+                w = w + (25/216*k1) + (1408/2565*k3) + (2197/4104*k4) - (1/5*k5)
+                System.out.println(t, w, h);
+            }
+            delta = 0.84 * Math.pow(TOL/R, 1/4);
+            if (delta <= 0.1) {
+                h = 0.1 * h;
+            } else if (delta >= 4) {
+                h = 4 * h;
+            } else {
+                h = 8 * h;
+            }
+            if (h > hmax) {
+                h = hmax;
+            }
+            if (t >= b) {
+                FLAG = 0;
+            } else if (t+h > b) {
+                h = b - t;
+            } else if (h < hmin) {
+                FLAG = 0;
+                System.out.println("minimum h exceeded");
+            }
+            
+            
+        }
+        
+        
+        try {
+            FileWriter writer = new FileWriter("rungekutta.txt");
+            PrintWriter saida = new PrintWriter(writer);
+            /////////////////
+            saida.close();  
+            writer.close();
+        } catch(IOException e){
+            JOptionPane.showMessageDialog(null, "O arquivo destino esta aberto!");
+        }
+    }
+    
     public static void main(String args[]) {
         double h = Double.valueOf(JOptionPane.showInputDialog(null,"Digite o passo"));
         int tam = Integer.valueOf(JOptionPane.showInputDialog(null,"Digite o numero linhas"));
