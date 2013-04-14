@@ -73,61 +73,56 @@ public class Compartimentos {
     }
     
     //Runge Kutta Fehlberg
-    public static void fehlberg(double h, int tam, double x[], double y[]) {
-        double a;
-        double b;
-        double alfa;
-        double hmax;
-        double hmin;
-        double TOL;
-        double delta;
+    public static void fehlberg() {
+        double a = Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'a'"));
+        double b = Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'b'"));
+        double alfa = Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'alfa'"));
+        double hmax = Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'hmax'"));
+        double hmin = Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'hmin'"));
+        double TOL = Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'TOL'"));
         double t = a;
         double w = alfa;
-        h = hmax;
-        int FLAG = 0;
+        double h = hmax;
+        int FLAG = 1;
         double k1, k2, k3, k4, k5, k6;
         double R;
-        while(FLAG == 1) {
-            k1 = h f (t, w);
-            k2 = h f (t + (1/4*h), w + (1/4*k1));
-            k3 = h f (t + (3/8*h), w + (3/32*k1) + (9/32*k2));
-            k4 = h f (t + (12/13*h), w + (1932/2197*k1) - (7200/2197*k2) + (7296/2197*k3));
-            k5 = h f (t + h, w + (439/216*k1) - 8*k2 + (3680/513*k3) - (845/4104*k4));
-            k6 = h f (t + (1/2*h), w - (8/27*k1) + 2*k2 - (3544/2565*k3) + (1859/4104*k4) - (11/40*k5));
-            R = 1/h | (1/360*k1) - (128/4275*k3) - (2197/75240*k4) + (1/50*k5) + (2/55*k6) |;
-            if (R <= TOL) {
-                t = t + h;
-                w = w + (25/216*k1) + (1408/2565*k3) + (2197/4104*k4) - (1/5*k5)
-                System.out.println(t, w, h);
-            }
-            delta = 0.84 * Math.pow(TOL/R, 1/4);
-            if (delta <= 0.1) {
-                h = 0.1 * h;
-            } else if (delta >= 4) {
-                h = 4 * h;
-            } else {
-                h = 8 * h;
-            }
-            if (h > hmax) {
-                h = hmax;
-            }
-            if (t >= b) {
-                FLAG = 0;
-            } else if (t+h > b) {
-                h = b - t;
-            } else if (h < hmin) {
-                FLAG = 0;
-                System.out.println("minimum h exceeded");
-            }
-            
-            
-        }
-        
-        
         try {
-            FileWriter writer = new FileWriter("rungekutta.txt");
+            FileWriter writer = new FileWriter("fehlberg.txt");
             PrintWriter saida = new PrintWriter(writer);
-            /////////////////
+            saida.println("t\t w\t h\t k1\t k2\t k3\t k4\t k5\t k6\t dw/dt");
+            while(FLAG == 1) {
+                k1 = h * (t * w);
+                k2 = h * (t + (h/4)) * (w + (k1/4));
+                k3 = h * (t + (3/8*h)) * (w + (3/32*k1) + (9/32*k2));
+                k4 = h * (t + (12/13*h)) * (w + (1932/2197*k1) - (7200/2197*k2) + (7296/2197*k3));
+                k5 = h * (t + h) * (w + (439/216*k1) - 8*k2 + (3680/513*k3) - (845/4104*k4));
+                k6 = h * (t + (h/2)) * (w - (8/27*k1) + 2*k2 - (3544/2565*k3) + (1859/4104*k4) - (11/40*k5));
+                R = 1/h * Math.abs((1/360*k1) - (128/4275*k3) - (2197/75240*k4) + (1/50*k5) + (2/55*k6));
+                if (R <= TOL) {
+                    t = t + h;
+                    w = w + (25/216*k1) + (1408/2565*k3) + (2197/4104*k4) - (1/5*k5);
+                    saida.println(t + "\t" + w + "\t" + h + "\t" + k1 + "\t" + k2 + "\t" + k3 + "\t" + k4 + "\t" + k5 + "\t" + k6 + "\t" + (3*w*2+w));
+                }
+                double delta = 0.84 * Math.pow(TOL/R, 1/4);
+                if (delta <= 0.1) {
+                    h = 0.1 * h;
+                } else if (delta >= 4) {
+                    h = 4 * h;
+                } else {
+                    h = 8 * h;
+                }
+                if (h > hmax) {
+                    h = hmax;
+                }
+                if (t >= b) {
+                    FLAG = 0;
+                } else if (t+h > b) {
+                    h = b - t;
+                } else if (h < hmin) {
+                    FLAG = 0;
+                    System.out.println("minimum h exceeded");
+                }
+            }
             saida.close();  
             writer.close();
         } catch(IOException e){
@@ -136,15 +131,14 @@ public class Compartimentos {
     }
     
     public static void main(String args[]) {
-        double h = Double.valueOf(JOptionPane.showInputDialog(null,"Digite o passo"));
+        /*double h = Double.valueOf(JOptionPane.showInputDialog(null,"Digite o passo"));
         int tam = Integer.valueOf(JOptionPane.showInputDialog(null,"Digite o numero linhas"));
         double x[] = new double[tam+1];
         double y[] = new double[tam+1];
-        //double yexato[] = new double[tam+1];
-        //double erro[] = new double[tam+1];
         x[0] = 0;
         y[0] = 1;
         euler(h, tam, x, y);
-        rungeKuttaQuatro(h, tam, x, y);
+        rungeKuttaQuatro(h, tam, x, y);*/
+        fehlberg();
     }
 }
