@@ -89,19 +89,20 @@ public class Compartimentos {
         try {
             FileWriter writer = new FileWriter("fehlberg.txt");
             PrintWriter saida = new PrintWriter(writer);
-            saida.println("t\t w\t h\t k1\t k2\t k3\t k4\t k5\t k6\t dw/dt");
+            saida.println("t\t w\t h\t k1\t k2\t k3\t k4\t k5\t k6\t Erro\t dw/dt");
             while(FLAG == 1) {
-                k1 = h * (t * w);
-                k2 = h * (t + (h/4)) * (w + (k1/4));
-                k3 = h * (t + (3/8*h)) * (w + (3/32*k1) + (9/32*k2));
-                k4 = h * (t + (12/13*h)) * (w + (1932/2197*k1) - (7200/2197*k2) + (7296/2197*k3));
-                k5 = h * (t + h) * (w + (439/216*k1) - 8*k2 + (3680/513*k3) - (845/4104*k4));
-                k6 = h * (t + (h/2)) * (w - (8/27*k1) + 2*k2 - (3544/2565*k3) + (1859/4104*k4) - (11/40*k5));
+                k1 = - h * (t * w);
+                k2 = - h * (t + (h/4)) * (w + (k1/4));
+                k3 = - h * (t + (3/8*h)) * (w + (3/32*k1) + (9/32*k2));
+                k4 = - h * (t + (12/13*h)) * (w + (1932/2197*k1) - (7200/2197*k2) + (7296/2197*k3));
+                k5 = - h * (t + h) * (w + (439/216*k1) - 8*k2 + (3680/513*k3) - (845/4104*k4));
+                k6 = - h * (t + (h/2)) * (w - (8/27*k1) + 2*k2 - (3544/2565*k3) + (1859/4104*k4) - (11/40*k5));
                 R = 1/h * Math.abs((1/360*k1) - (128/4275*k3) - (2197/75240*k4) + (1/50*k5) + (2/55*k6));
                 if (R <= TOL) {
                     t = t + h;
                     w = w + (25/216*k1) + (1408/2565*k3) + (2197/4104*k4) - (1/5*k5);
-                    saida.println(t + "\t" + w + "\t" + h + "\t" + k1 + "\t" + k2 + "\t" + k3 + "\t" + k4 + "\t" + k5 + "\t" + k6 + "\t" + (3*w*2+w));
+                    System.out.println(w);
+                    saida.println(t + "\t" + w + "\t" + h + "\t" + k1 + "\t" + k2 + "\t" + k3 + "\t" + k4 + "\t" + k5 + "\t" + k6 + "\t" + (double)((t - (Math.exp(-w*w/2)))*100/(Math.exp(-w*w/2))) + "\t" + 3*w*2+w);
                 }
                 double delta = 0.84 * Math.pow(TOL/R, 1/4);
                 if (delta <= 0.1) {
