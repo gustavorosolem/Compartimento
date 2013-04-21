@@ -74,12 +74,12 @@ public class Compartimentos {
     
     //Runge Kutta Fehlberg
     public static void fehlberg() {
-        double a = Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'a'"));
-        double b = Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'b'"));
-        double alfa = Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'alfa'"));
-        double hmax = Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'hmax'"));
-        double hmin = Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'hmin'"));
-        double TOL = Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'TOL'"));
+        double a = 0;//Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'a'"));
+        double b = 100;//Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'b'"));
+        double alfa = 1000;//Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'alfa'"));
+        double hmax = 1.f;//Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'hmax'"));
+        double hmin = 0.000001f;//Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'hmin'"));
+        double TOL = 0.0001f;//Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'TOL'"));
         double t = a;
         double w = alfa;
         double h = hmax;
@@ -100,7 +100,7 @@ public class Compartimentos {
                 R = 1/h * Math.abs((1/360*k1) - (128/4275*k3) - (2197/75240*k4) + (1/50*k5) + (2/55*k6));
                 if (R <= TOL) {
                     t = t + h;
-                    w = w + (25/216*k1) + (1408/2565*k3) + (2197/4104*k4) - (1/5*k5);
+                    w = w + 25*k1/216 + 1408*k3/2565 + 2197*k4/4104 - 1*k5/5;
                     System.out.println(w);
                     saida.println(t + "\t" + w + "\t" + h + "\t" + k1 + "\t" + k2 + "\t" + k3 + "\t" + k4 + "\t" + k5 + "\t" + k6 + "\t" + (double)((t - (Math.exp(-w*w/2)))*100/(Math.exp(-w*w/2))) + "\t" + 3*w*2+w);
                 }
