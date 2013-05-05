@@ -74,7 +74,7 @@ public class Compartimentos {
     
     //Runge Kutta Fehlberg
     public static void fehlberg() {
-        double a = 0;//Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'a'"));
+        /*double a = 0;//Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'a'"));
         double b = 100;//Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'b'"));
         double alfa = 1000;//Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'alfa'"));
         double hmax = 1.f;//Double.valueOf(JOptionPane.showInputDialog(null,"Digite o 'hmax'"));
@@ -126,6 +126,63 @@ public class Compartimentos {
                     System.out.println("minimum h exceeded");
                 }
             }
+            saida.close();  
+            writer.close();
+        } catch(IOException e){
+            JOptionPane.showMessageDialog(null, "O arquivo destino esta aberto!");
+        }*/
+        double t = 0;
+        double a = 0;
+        double b = 4000;
+        double W = 1000;//condição inicial
+        double hMax = 1.f;
+        double hMin = 0.000000000001f;
+        double h = hMax;
+        double K1 = 0, K2 = 0, K3 = 0, K4 = 0, K5 = 0, K6 = 0;
+        double R = 0;
+        double TOL = 0.0001f;//tolerância no erro
+        double delta = 0;
+        double Wa = 0;
+        double erro = 0;
+        int FLAG = 1;
+        try {
+            FileWriter writer = new FileWriter("fehlberg.txt");
+            PrintWriter saida = new PrintWriter(writer);
+            while (FLAG == 1) {
+                K1 = h * (3.0f *W*W + W);
+                K2 = h * (3.0f *(W + K1 / 4)*(W + K1 / 4)+(W + K1 / 4));
+                K3 = h * (3.0f *(W + 3 * K1 / 32 + 9 * K2 / 32)*(W + 3 * K1 / 32 + 9 * K2 / 32)+(W + 3 * K1 / 32 + 9 * K2 / 32));
+                K4 = h * (3.0f *(W + 1932 * K1 / 2197 - 7200 * K2 / 2197 + 7296 * K3 / 2197)*(W + 1932 * K1 / 2197 - 7200 * K2 / 2197 + 7296 * K3 / 2197)+(W + 1932 * K1 / 2197 - 7200 * K2 / 2197 + 7296 * K3 / 2197));
+                K5 = h * (3.0f *(W + 439 * K1 / 216 - 8 * K2 + 3680 * K3 / 513 - 845 * K4 / 4104)*(W + 439 * K1 / 216 - 8 * K2 + 3680 * K3 / 513 - 845 * K4 / 4104)+(W + 439 * K1 / 216 - 8 * K2 + 3680 * K3 / 513 - 845 * K4 / 4104));
+                K6 = h * (3.0f *(W - 8 * K1 / 27 + 2 * K2 - 3544 * K3 / 2565 + 1859 * K4 / 4104 - 11 * K5 / 40)*(W - 8 * K1 / 27 + 2 * K2 - 3544 * K3 / 2565 + 1859 * K4 / 4104 - 11 * K5 / 40)+(W - 8 * K1 / 27 + 2 * K2 - 3544 * K3 / 2565 + 1859 * K4 / 4104 - 11 * K5 / 40));
+                R = Math.abs(K1 / 360 - 128 * K3 / 4275 - 2197 * K4 / 75240 + K5 / 50 + 2 * K6 / 55) / h;
+                if (R < TOL) {
+                    Wa=W;
+                    t = t + h;
+                    W = W + 25 * K1 / 216 + 1408 * K3 / 2565 + 2197 * K4 / 4104 - K5 / 5;
+                    erro = (W-Wa)*100f/Wa;
+                    saida.println(t + "\t" + W + "\t" + h+"\t"+Wa+"\t"+erro);
+                }
+                delta = 0.84 * Math.pow(TOL / R, 0.25);
+                if (delta <= 0.1) {
+                    h = 0.1f * h;
+                } else if (delta > 4) {
+                    h = 4 * h;
+                } else {
+                    h = delta * h;
+                }
+                if (h > hMax) {
+                    h = hMax;
+                }
+                if (t >= b) {
+                    FLAG = 0;
+                } else if ((t + h) > b) {
+                    h = b - t;
+                } else if (h < hMin) {
+                    FLAG = 0;
+                    System.out.println("Terminado sem sucesso!");
+                }
+            }//fim while
             saida.close();  
             writer.close();
         } catch(IOException e){
