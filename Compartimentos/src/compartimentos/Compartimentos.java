@@ -143,15 +143,13 @@ public class Compartimentos {
         double TOL = 0.0001f;//tolerância no erro
         double delta = 0;
         double Wa = 0;
-        double erro = 0, neg;
+        double erro = 0;
         int FLAG = 1;
         try {
             FileWriter writer = new FileWriter("fehlberg.txt");
             PrintWriter saida = new PrintWriter(writer);
             while (FLAG == 1) {
-                neg = 3.0f *W*W + W;
-                neg *= -1;
-                K1 = h * neg;
+                K1 = h * (3.0f *W*W + W);
                 K2 = h * (3.0f *(W + K1 / 4)*(W + K1 / 4)+(W + K1 / 4));
                 K3 = h * (3.0f *(W + 3 * K1 / 32 + 9 * K2 / 32)*(W + 3 * K1 / 32 + 9 * K2 / 32)+(W + 3 * K1 / 32 + 9 * K2 / 32));
                 K4 = h * (3.0f *(W + 1932 * K1 / 2197 - 7200 * K2 / 2197 + 7296 * K3 / 2197)*(W + 1932 * K1 / 2197 - 7200 * K2 / 2197 + 7296 * K3 / 2197)+(W + 1932 * K1 / 2197 - 7200 * K2 / 2197 + 7296 * K3 / 2197));
@@ -163,7 +161,7 @@ public class Compartimentos {
                     t = t + h;
                     W = W + 25 * K1 / 216 + 1408 * K3 / 2565 + 2197 * K4 / 4104 - K5 / 5;
                     erro = (W-Wa)*100f/Wa;
-                    System.out.println(t + "\t" + W + "\t" + h+"\t"+Wa+"\t"+erro);
+                    saida.println(t + "\t" + W + "\t" + h+"\t"+Wa+"\t"+erro);
                 }
                 delta = 0.84 * Math.pow(TOL / R, 0.25);
                 if (delta <= 0.1) {
