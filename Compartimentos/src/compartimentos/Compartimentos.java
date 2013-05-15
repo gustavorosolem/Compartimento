@@ -190,7 +190,7 @@ public class Compartimentos {
         }
     }
     
-    public static void main(String args[]) {
+    /*public static void main(String args[]) {
         /*double h = Double.valueOf(JOptionPane.showInputDialog(null,"Digite o passo"));
         int tam = Integer.valueOf(JOptionPane.showInputDialog(null,"Digite o numero linhas"));
         double x[] = new double[tam+1];
@@ -198,7 +198,7 @@ public class Compartimentos {
         x[0] = 0;
         y[0] = 1;
         euler(h, tam, x, y);
-        rungeKuttaQuatro(h, tam, x, y);*/
-        fehlberg();
-    }
+        rungeKuttaQuatro(h, tam, x, y);
+        //fehlberg();
+    }*/
 }
