@@ -15,9 +15,12 @@ public class TesteSistemaSimples {
 
     public static void main(String args[]) {
         double h = 0.01, t = 0.1;
-        double k11 = 0, k12 = 0, k13 = 0, k14 = 0;
-        double k21 = 0, k22 = 0, k23 = 0, k24 = 0;
-        double x1 = 0, x2 = 0;
+        double rk11 = 0, rk12 = 0, rk13 = 0, rk14 = 0;
+        double rk21 = 0, rk22 = 0, rk23 = 0, rk24 = 0;
+        double x1 = 100, x2 = 0;
+        double k12 = 0.03;
+        double k21 = 0.02;
+        double k20 = 0.01;
         double auxa = 0, auxc = 0, erro;
         SistemaSimples ss = new SistemaSimples();
         try {
@@ -26,17 +29,18 @@ public class TesteSistemaSimples {
             while (t < 4) {
                 auxa = x2;
                 auxc = x1;
-                k11 = h * ss.kUm1(t, x1, x2);
-                k21 = h * ss.kUm2(t, x1, x2);
-                k12 = h * ss.kDois1(t, x1, x2, k11, h);
-                k22 = h * ss.kDois2(t, x1, x2, k21, h);
-                k13 = h * ss.kTres1(t, x1, x2, k12, h);
-                k23 = h * ss.kTres2(t, x1, x2, k22, h);
-                k14 = h * ss.kQuatro1(t, x1, x2, k13, h);
-                k24 = h * ss.kQuatro2(t, x1, x2, k23, h);
+                rk11 = h * ss.kUm1(x1, x2, k12, k21);
+                rk21 = h * ss.kUm2(x1, x2, k12, k21, k20);
+                rk12 = h * ss.kDois1(x1, x2, k12, k21, rk11);
+                rk22 = h * ss.kDois2(x1, x2, k12, k21, k20, rk21);
+                rk13 = h * ss.kTres1(x1, x2, k12, k21, rk12);
+                rk23 = h * ss.kTres2(x1, x2, k12, k21, k20, rk22);
+                rk14 = h * ss.kQuatro1(x1, x2, k12, k21, rk13);
+                rk24 = h * ss.kQuatro2(x1, x2, k12, k21, k20, rk23);
+                System.out.println(t + "\t" + x1 + "\t" + x2);
                 saida.println(t + "\t" + x1 + "\t" + x2);
-                x1 = x1 + (k11 + 2 * k12 + 2 * k13 + k14) / 6;
-                x2 = x2 + (k21 + 2 * k22 + 2 * k23 + k24) / 6;
+                x1 = x1 + (rk11 + 2 * rk12 + 2 * rk13 + rk14) / 6;
+                x2 = x2 + (rk21 + 2 * rk22 + 2 * rk23 + rk24) / 6;
                 erro = (x2 - auxa) / auxa + (x1 - auxc) / auxc;
                 t = t + h;
             }
